@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MEA Облако</string>
+
+    <string name="facebook_app_id">1434147603516119</string>
+    <string name="hello_world">Привет</string>
+    <string name="action_settings">Настройки</string>
+    <string name="btn_login">Войти</string>
+    <string name="btn_create_new_account">ПОДКЛЮЧИТЬСЯ К NEWBIE</string>
+    <string name="btn_website">СОВМЕСТИМЫЕ УСТРОЙСТВА</string>
+    <string name="app_launcher_name">MEA Облако</string>
+    <string name="title_activity_login">Зайти в MEA</string>
+
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Электроннвя почта</string>
+    <string name="prompt_password">Пароль</string>
+    <string name="action_sign_in">Зайти в систему/Регистрация</string>
+    <string name="action_sign_in_short">Зайти в систему</string>
+    <string name="error_invalid_email">Такой адрес электронной почты не существует в базе данных</string>
+    <string name="error_invalid_password">Этот пароль недостаточно длинный</string>
+    <string name="error_incorrect_password">Неверный пароль</string>
+    <string name="error_field_required">Обязательное поле</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+
+    <string name="title_activity_fullscreen">Добро пожаловать в MEA!</string>
+
+    <string name="title_activity_sample_fullscreen">SampleFullscreenActivity</string>
+    <string name="title_activity_loading_ad">LoadingAd</string>
+
+    <string name="interstitial_ad_sample">Interstitial Ad Sample</string>
+    <string name="start_level">Level 1</string>
+    <string name="next_level">Next Level</string>
+    <!-- -
+        This is an ad unit ID for an interstitial test ad. Replace with your own interstitial ad unit id.
+        For more information, see https://support.google.com/admob/answer/3052638
+    <!- -->
+    <string name="interstitial_ad_unit_id">ca-app-pub-4472054890564612/5905866680</string>
+    <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="title_activity_nav">NavActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="title_activity_activity_nav_menu">ActivityNavMenu</string>
+
+    <string name="title_activity_desktop_view">Экран облачного ПК</string>
+
+
+</resources>

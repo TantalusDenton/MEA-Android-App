@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/mea_main_edit2"
+    android:id="@+id/ContainerOfMenu">
+
+    <!--<com.google.android.gms.ads.AdView
+        android:id="@+id/adView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        ads:adSize="BANNER"
+        ads:adUnitId="@string/banner_ad_unit_id">
+    </com.google.android.gms.ads.AdView>-->
+
+    <ImageView
+        android:id="@+id/mea_title"
+        android:contentDescription="@null"
+        android:scaleType="fitCenter"
+        android:src="@drawable/mea_header"
+        android:layout_width="wrap_content"
+        android:layout_height="125dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="50dp" />
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="wrap_content"
+        android:layout_height="155dp"
+        android:layout_alignParentEnd="false"
+        android:layout_marginRight="20dp"
+        android:layout_alignParentStart="false"
+        android:layout_marginLeft="20dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="20dp">
+        <ImageButton
+        android:src="@drawable/freeclouddesktop_in_smartphone"
+        android:layout_width="160dp"
+        android:layout_height="100dp"
+        android:id="@+id/TryNewbie"
+        android:layout_alignParentBottom="false"
+        android:layout_alignParentLeft="false"
+        android:layout_alignParentStart="false"
+            android:scaleType="fitCenter"
+        android:backgroundTint="#00ffffff"
+            android:layout_alignParentTop="false"
+            android:layout_alignWithParentIfMissing="false"
+            android:onClick="OnTryNewbieClick" />
+        <ImageButton
+            android:src="@drawable/eleet_in_smartphone"
+            android:layout_width="160dp"
+            android:layout_height="100dp"
+            android:id="@+id/AccountLogIn"
+            android:scaleType="fitCenter"
+            android:backgroundTint="#00ffffff"
+            android:layout_alignWithParentIfMissing="false"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:onClick="OnLoginClick" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Try MEA Free Edition Login: newbie Password: qwerty"
+            android:id="@+id/TryNewbieText"
+            android:layout_below="@+id/TryNewbie"
+            android:layout_alignRight="@+id/TryNewbie"
+            android:layout_alignEnd="@+id/TryNewbie"
+            android:clickable="false"
+            android:password="false"
+            android:phoneNumber="false"
+            android:textAlignment="center"
+            android:layout_alignParentBottom="true"
+            android:background="#e1e0ffff"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:padding="1dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Sign In or Sign up for your personal Power or Eleet Cloud Computer"
+            android:id="@+id/textView"
+            android:layout_below="@+id/AccountLogIn"
+            android:textAlignment="center"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="false"
+            android:layout_alignLeft="@+id/AccountLogIn"
+            android:layout_alignStart="@+id/AccountLogIn"
+            android:textIsSelectable="false"
+            android:background="#e1e0ffff"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:padding="1dp" />
+    </RelativeLayout>
+</RelativeLayout>
