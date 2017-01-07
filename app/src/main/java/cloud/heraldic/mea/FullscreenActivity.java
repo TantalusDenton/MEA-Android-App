@@ -21,17 +21,14 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import cloud.heraldic.mea.R;
 
-/**
- * An example full-screen activity that shows and hides the system UI (i.e.
- * status bar and navigation/system bar) with user interaction.
- */
+
 public class FullscreenActivity extends AppCompatActivity {
 
     public static final String REMOTE_ACCESS_URL = "https://www.heraldic.cloud/MiseEnAbyme";
 
     private WebView webView;
 
-   //first lets show an ad -T
+    //first lets show an ad -T
 
     InterstitialAd mInterstitialAd;
     private InterstitialAd interstitial;
@@ -141,18 +138,18 @@ public class FullscreenActivity extends AppCompatActivity {
         //I wrote this to hide system ui after keyboard was used and closed.
         mContentView.setOnSystemUiVisibilityChangeListener(
                 new View.OnSystemUiVisibilityChangeListener() {
-                @Override
-                public void onSystemUiVisibilityChange(int visibility) {
-                    if ((View.SYSTEM_UI_FLAG_FULLSCREEN) != 0) {
-                        mContentView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
-                                | View.SYSTEM_UI_FLAG_FULLSCREEN
-                                | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+                    @Override
+                    public void onSystemUiVisibilityChange(int visibility) {
+                        if ((View.SYSTEM_UI_FLAG_FULLSCREEN) != 0) {
+                            mContentView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
+                                    | View.SYSTEM_UI_FLAG_FULLSCREEN
+                                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+                        }
                     }
-                }
-        });
+                });
 
         webView.setWebChromeClient(new WebChromeClient() {
             @Override

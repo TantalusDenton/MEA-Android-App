@@ -51,7 +51,7 @@ public class MainMenu extends AppCompatActivity {
     }
 
     public void OnLoginClick(View view) {
-        startActivity(new Intent(MainMenu.this, SuboperatingSystem.class)); //continue development of this feature in the next release
+        startActivity(new Intent(MainMenu.this, LoginActivity.class)); //continue development of this feature in the next release
     }
 
     public void OnTryNewbieClick(View view) {

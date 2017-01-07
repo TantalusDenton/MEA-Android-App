@@ -49,6 +49,7 @@
     <string name="title_activity_activity_nav_menu">ActivityNavMenu</string>
 
     <string name="title_activity_desktop_view">Экран облачного ПК</string>
-
+    <string name="title_activity_suboperating_system">SuboperatingSystem</string>
+    <string name="section_format">Hello World from section: %1$d</string>
 
 </resources>
