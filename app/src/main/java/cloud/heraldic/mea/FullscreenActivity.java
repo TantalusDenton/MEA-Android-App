@@ -13,16 +13,32 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.amazonaws.AmazonServiceException;
+import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.PropertiesCredentials;
+import com.amazonaws.services.ec2.AmazonEC2;
+import com.amazonaws.services.ec2.AmazonEC2Client;
+import com.amazonaws.services.ec2.model.KeyPair;
+import com.amazonaws.services.ec2.model.StartInstancesRequest;
+import com.amazonaws.services.ec2.model.StopInstancesRequest;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.LinkedList;
+import java.util.List;
+
 import cloud.heraldic.mea.R;
 
 
 public class FullscreenActivity extends AppCompatActivity {
+
+    static KeyPair keyPair;
+    static int count  = 1;
+
+    static AmazonEC2      ec2 ;
 
     public static final String REMOTE_ACCESS_URL = "https://www.heraldic.cloud/MiseEnAbyme";
 
@@ -32,7 +48,6 @@ public class FullscreenActivity extends AppCompatActivity {
 
     InterstitialAd mInterstitialAd;
     private InterstitialAd interstitial;
-
 
 
     /**

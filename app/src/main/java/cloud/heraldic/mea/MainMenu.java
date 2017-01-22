@@ -9,6 +9,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.widget.Toast;
 
+import com.amazonaws.auth.CognitoCachingCredentialsProvider;
+import com.amazonaws.regions.Regions;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -26,6 +28,13 @@ public class MainMenu extends AppCompatActivity {
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+
+        //added to log in to AWS through Cognito...
+        CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(
+                getApplicationContext(),
+                "us-west-2:3f976d17-3069-4d7d-8806-feca8c46ab7e", // Identity Pool ID
+                Regions.US_WEST_2 // Region
+        );
     }
 
     @Override
@@ -55,7 +64,7 @@ public class MainMenu extends AppCompatActivity {
     }
 
     public void OnTryNewbieClick(View view) {
-        startActivity(new Intent(MainMenu.this, FullscreenActivity.class));
+        startActivity(new Intent(MainMenu.this, LoadingCloudDesktop.class));
     }
 
     public void onWebsiteClick(View view) {

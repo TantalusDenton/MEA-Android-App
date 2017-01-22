@@ -51,5 +51,7 @@
     <string name="title_activity_desktop_view">Экран облачного ПК</string>
     <string name="title_activity_suboperating_system">SuboperatingSystem</string>
     <string name="section_format">Hello World from section: %1$d</string>
+    <string name="continue_button">Continue</string>
+    <string name="loading">Loading...</string>
 
 </resources>
