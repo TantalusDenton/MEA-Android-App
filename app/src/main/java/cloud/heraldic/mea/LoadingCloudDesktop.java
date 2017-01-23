@@ -37,13 +37,30 @@ public class LoadingCloudDesktop extends AppCompatActivity {
 
     static AmazonEC2 ec2;
 
-    public static Properties getProperties() {
-        if(properties == null) {
+    public static Properties getProperties()
+    {
+        if(properties == null)
+        {
             properties = new Properties();
-            try{
-                properties.load( LoadingCloudDesktop.class.getResourceAsStream( "AwsCredentials.properties"));
+            InputStream inputStream = null;
+            AssetManager assetManager = null;
+
+            try
+            {
+                // OLD: properties.load(LoadingCloudDesktop.class.getResourceAsStream("AwsCredentials.properties"));
+
+                assetManager = getResources().getAssets();
+                inputStream = assetManager.open("AwsCredentials.properties");
+                properties.load(inputStream);
             }
-            catch (IOException e) {
+            catch (IOException e)
+            {
+                android.widget.Toast.makeText(getApplicationContext(),
+                        "Failed to open AwsCredentials property file", Toast.LENGTH_SHORT).show();
+                e.printStackTrace();
+            }
+            catch (Exception e)
+            {
                 e.printStackTrace();
             }
         }
