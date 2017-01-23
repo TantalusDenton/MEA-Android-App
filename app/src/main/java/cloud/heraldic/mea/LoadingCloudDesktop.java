@@ -37,31 +37,48 @@ public class LoadingCloudDesktop extends AppCompatActivity {
 
     static AmazonEC2 ec2;
 
+    private static final String TAG = "MEA_APP";
+
     public static Properties getProperties()
     {
         if(properties == null)
         {
-            properties = new Properties();
             InputStream inputStream = null;
-            AssetManager assetManager = null;
 
             try
             {
                 // OLD: properties.load(LoadingCloudDesktop.class.getResourceAsStream("AwsCredentials.properties"));
 
-                assetManager = getResources().getAssets();
+                AsetsManager assetManager = getResources().getAssets();
                 inputStream = assetManager.open("AwsCredentials.properties");
+                properties = new Properties();
                 properties.load(inputStream);
             }
             catch (IOException e)
             {
-                android.widget.Toast.makeText(getApplicationContext(),
-                        "Failed to open AwsCredentials property file", Toast.LENGTH_SHORT).show();
+                Log.e(TAG, "Failed to open AwsCredentials property file!");
                 e.printStackTrace();
             }
             catch (Exception e)
             {
+                Log.e(TAG, "Unknown error while opening AwsCredentials property file!");
                 e.printStackTrace();
+            }
+            finally
+            {
+                if (inputStream != null)
+                {
+                    try
+                    {
+                        inputStream.close();
+                    }
+                    catch(IOException ioex)
+                    {
+                        // Very bad things just happened... handle it
+                        Log.e(TAG, "Failed to close input stream!");
+                        e.printStackTrace();
+                    }
+                }
             }
         }
         return properties;
