@@ -9,7 +9,7 @@
     tools:openDrawer="start">
 
     <include
-        layout="@layout/content_main_menu"
+        layout="@layout/activity_fullscreen"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

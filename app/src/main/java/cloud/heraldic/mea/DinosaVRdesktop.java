@@ -1,10 +1,12 @@
 package cloud.heraldic.mea;
 
 import android.annotation.SuppressLint;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.ActionBar;
+import android.util.Log;
 import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -19,24 +21,28 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 
 import java.net.URI;
-import java.net.URISyntaxException;import cloud.heraldic.mea.R;
+import java.net.URISyntaxException;
+import android.hardware.SensorEventListener;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorManager;
+import android.content.Context;                          //auto imported. Tutorial didnt mention it
 
-/**
- * Created by dmitriyfedykovich on 29.08.15.
- */
-public class CloudDesktopView extends FullscreenActivity {
+/*   NOTE BY TANTALUS:
+*   Cannot have more than one AWS credentials managers.
+*   e.g I ran this script that reads gyro and updates Dynamodb in the same activity
+*   but i had the same scripts in my MainMenu activity. App just crashed.
+* */
+public class DinosaVRdesktop extends FullscreenActivity implements SensorEventListener{
 
-    static KeyPair keyPair;
+    public static String DeviceAxisX, DeviceAxisY, DeviceAxisZ;
+    private SensorManager senSensorManager;
+    private Sensor senAccelerometer;
+    private DynamoDBManager.GyroAxis ThisDevicesAxes= new DynamoDBManager.GyroAxis();
+    public static AmazonClientManager clientManager = null;
     static int count  = 1;
-
-    static AmazonEC2 ec2 ;
-
     public static final String REMOTE_ACCESS_URL = "https://www.heraldic.cloud/MiseEnAbyme";
-
     private WebView webView;
-
-    //first lets show an ad -T
-
     InterstitialAd mInterstitialAd;
     private InterstitialAd interstitial;
 
@@ -115,14 +121,20 @@ public class CloudDesktopView extends FullscreenActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_cloud_desktop_view);
+
+        senSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        senAccelerometer = senSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        senSensorManager.registerListener(this, senAccelerometer , SensorManager.SENSOR_DELAY_NORMAL); //needs to be much more often probably
+
+        clientManager = new AmazonClientManager(this);
 
         mVisible = true;
         //mControlsView = findViewById(R.id.fullscreen_content_controls);
         mContentView = findViewById(R.id.webView);
+
         webView = (WebView) findViewById(R.id.webView);
-        webView.setWebViewClient(new CloudDesktopView.HelloWebViewClient());
+        webView.setWebViewClient(new DinosaVRdesktop.HelloWebViewClient());
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setDomStorageEnabled(true);
@@ -183,7 +195,7 @@ public class CloudDesktopView extends FullscreenActivity {
         AdRequest adRequest = new AdRequest.Builder().build();
 
         // Prepare the Interstitial Ad
-        interstitial = new InterstitialAd(CloudDesktopView.this);
+        interstitial = new InterstitialAd(DinosaVRdesktop.this);
         // Insert the Ad Unit ID
         interstitial.setAdUnitId(getString(R.string.interstitial_ad_unit_id));
 
@@ -191,12 +203,147 @@ public class CloudDesktopView extends FullscreenActivity {
         // Prepare an Interstitial Ad Listener
         interstitial.setAdListener(new AdListener() {
             public void onAdLoaded() {
-        // Call displayInterstitial() function
+                // Call displayInterstitial() function
                 displayInterstitial();
             }
         });
 
         //ads end
+    }
+
+    public void onSensorChanged(SensorEvent sensorEvent) {
+        Sensor mySensor = sensorEvent.sensor;
+
+        if (mySensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+            DeviceAxisX = Float.toString(sensorEvent.values[0]);
+            DeviceAxisY = Float.toString(sensorEvent.values[1]);
+            DeviceAxisZ = Float.toString(sensorEvent.values[2]);
+            ThisDevicesAxes.setXaxis(DeviceAxisX);
+            //Log.d("X device axis IZzzz..", DeviceAxisX);
+            ThisDevicesAxes.setYaxis(DeviceAxisY);
+            ThisDevicesAxes.setZaxis(DeviceAxisZ);
+            new UpdateAttributeTask().execute();
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        //Nothing, this method needs to be here only for "inplements SensorEventListener"...
+    }
+
+    private class DynamoDBManagerTask extends
+            AsyncTask<DinosaVRdesktop.DynamoDBManagerType, Void, DinosaVRdesktop.DynamoDBManagerTaskResult> {
+
+        protected DinosaVRdesktop.DynamoDBManagerTaskResult doInBackground(
+                DinosaVRdesktop.DynamoDBManagerType... types) {
+
+            String tableStatus = DynamoDBManager.getTestTableStatus();
+
+            DinosaVRdesktop.DynamoDBManagerTaskResult result = new DinosaVRdesktop.DynamoDBManagerTaskResult();
+            result.setTableStatus(tableStatus);
+            result.setTaskType(types[0]);
+
+            if (types[0] == DinosaVRdesktop.DynamoDBManagerType.CREATE_TABLE) {
+                if (tableStatus.length() == 0) {
+                    //DynamoDBManager.createTable();
+                }
+            } else if (types[0] == DinosaVRdesktop.DynamoDBManagerType.INSERT_USER) {
+                if (tableStatus.equalsIgnoreCase("ACTIVE")) {
+                    DynamoDBManager.insertUsers();
+                }
+            } else if (types[0] == DinosaVRdesktop.DynamoDBManagerType.LIST_USERS) {
+                if (tableStatus.equalsIgnoreCase("ACTIVE")) {
+                    //DynamoDBManager.getUserList();
+                }
+            } else if (types[0] == DinosaVRdesktop.DynamoDBManagerType.CLEAN_UP) {
+                if (tableStatus.equalsIgnoreCase("ACTIVE")) {
+                    //DynamoDBManager.cleanUp();
+                }
+            }
+
+            return result;
+        }
+
+        protected void onPostExecute(DinosaVRdesktop.DynamoDBManagerTaskResult result) {
+
+            if (result.getTaskType() == DinosaVRdesktop.DynamoDBManagerType.CREATE_TABLE) {
+
+                if (result.getTableStatus().length() != 0) {
+                    Toast.makeText(
+                            DinosaVRdesktop.this,
+                            "The test table already exists.\nTable Status: "
+                                    + result.getTableStatus(),
+                            Toast.LENGTH_LONG).show();
+                }
+
+            } else if (!result.getTableStatus().equalsIgnoreCase("ACTIVE")) {
+
+                Toast.makeText(
+                        DinosaVRdesktop.this,
+                        "The test table is not ready yet.\nTable Status: "
+                                + result.getTableStatus(), Toast.LENGTH_LONG)
+                        .show();
+            } else if (result.getTableStatus().equalsIgnoreCase("ACTIVE")
+                    && result.getTaskType() == DinosaVRdesktop.DynamoDBManagerType.INSERT_USER) {
+                Toast.makeText(DinosaVRdesktop.this,
+                        "Users inserted successfully!", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private enum DynamoDBManagerType {
+        GET_TABLE_STATUS, CREATE_TABLE, INSERT_USER, LIST_USERS, CLEAN_UP
+    }
+
+    private class DynamoDBManagerTaskResult {
+        private DinosaVRdesktop.DynamoDBManagerType taskType;
+        private String tableStatus;
+
+        public DinosaVRdesktop.DynamoDBManagerType getTaskType() {
+            return taskType;
+        }
+
+        public void setTaskType(DinosaVRdesktop.DynamoDBManagerType taskType) {
+            this.taskType = taskType;
+        }
+
+        public String getTableStatus() {
+            return tableStatus;
+        }
+
+        public void setTableStatus(String tableStatus) {
+            this.tableStatus = tableStatus;
+        }
+    }
+
+    private class UpdateAttributeTask extends AsyncTask<Void, Void, Void> {
+
+        protected Void doInBackground(Void... voids) {
+
+            DynamoDBManager.updateGyroAxis(ThisDevicesAxes);
+
+            return null;
+        }
+    }
+
+    @Override
+    public void onPause() {
+        senSensorManager.unregisterListener(this);
+        //AdMod stuff starts
+        /*if (mAdView != null) {
+            mAdView.pause();
+        }*/ //AdMob stuff ends
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        senSensorManager.registerListener(this, senAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+        //AdMod stuff starts
+        /*if (mAdView != null) {
+            mAdView.resume();
+        }*/ //AdMob stuff ends
     }
 
     @Override

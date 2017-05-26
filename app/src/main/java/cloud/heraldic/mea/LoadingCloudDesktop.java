@@ -1,9 +1,13 @@
 package cloud.heraldic.mea;
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
@@ -21,68 +25,14 @@ import com.amazonaws.services.ec2.model.KeyPair;
 import com.amazonaws.services.ec2.model.StartInstancesRequest;
 import com.amazonaws.services.ec2.model.StopInstancesRequest;
 
-import static java.lang.System.getProperties;
-
-/*These are the APIs*/
 public class LoadingCloudDesktop extends AppCompatActivity {
-    /*
-     * Important: Be sure to fill in your AWS access credentials in the
-     *            AwsCredentials.properties file before you try to run this
-     *            sample.
-     * http://aws.amazon.com/security-credentials
-     */
+
     static KeyPair keyPair;
     static int count = 1;
-    public static Properties properties;
 
-    static AmazonEC2 ec2;
+    //static AmazonEC2 ec2;
 
     private static final String TAG = "MEA_APP";
-
-    public static Properties getProperties()
-    {
-        if(properties == null)
-        {
-            InputStream inputStream = null;
-
-            try
-            {
-                // OLD: properties.load(LoadingCloudDesktop.class.getResourceAsStream("AwsCredentials.properties"));
-
-                AsetsManager assetManager = getResources().getAssets();
-                inputStream = assetManager.open("AwsCredentials.properties");
-                properties = new Properties();
-                properties.load(inputStream);
-            }
-            catch (IOException e)
-            {
-                Log.e(TAG, "Failed to open AwsCredentials property file!");
-                e.printStackTrace();
-            }
-            catch (Exception e)
-            {
-                Log.e(TAG, "Unknown error while opening AwsCredentials property file!");
-                e.printStackTrace();
-            }
-            finally
-            {
-                if (inputStream != null)
-                {
-                    try
-                    {
-                        inputStream.close();
-                    }
-                    catch(IOException ioex)
-                    {
-                        // Very bad things just happened... handle it
-                        Log.e(TAG, "Failed to close input stream!");
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }
-        return properties;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,9 +40,9 @@ public class LoadingCloudDesktop extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.loadingclouddesktop_layout);
 
-        ec2 = new AmazonEC2Client((AWSCredentials) getProperties()); //cast parameter as suggested by intellisense
+        //ec2 = new AmazonEC2Client((AWSCredentials) getProperties()); //cast parameter as suggested by intellisense
 
-        try {
+       /*try {
 
             List<String> instanceIds = new LinkedList<String>();
             instanceIds.add("i-8731d210");
@@ -113,12 +63,12 @@ public class LoadingCloudDesktop extends AppCompatActivity {
             System.out.println("Reponse Status Code: " + ase.getStatusCode());
             System.out.println("Error Code: " + ase.getErrorCode());
             System.out.println("Request ID: " + ase.getRequestId());
-        }
+        }*/
 
     }
 
     public void OnContinueClick(View view) {
-        startActivity(new Intent(LoadingCloudDesktop.this, FullscreenActivity.class)); //continue development of this feature in the next release
+        startActivity(new Intent(LoadingCloudDesktop.this, CloudDesktopView.class)); //continue development of this feature in the next release
     }
 
 }

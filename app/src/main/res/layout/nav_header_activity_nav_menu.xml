@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="@dimen/nav_header_height"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/map_background_02"
     android:gravity="bottom"
     android:orientation="vertical"
@@ -11,13 +12,13 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
-    <ImageView
-        android:id="@+id/imageView"
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adView"
         android:layout_width="wrap_content"
-        android:layout_height="75dp"
-        android:paddingTop="@dimen/nav_header_vertical_spacing"
-        android:src="@drawable/app_icon"
-        android:scaleType="fitStart" />
+        android:layout_height="wrap_content"
+        ads:adSize="BANNER"
+        ads:adUnitId="@string/banner_ad_unit_id">
+    </com.google.android.gms.ads.AdView>
 
     <TextView
         android:layout_width="match_parent"

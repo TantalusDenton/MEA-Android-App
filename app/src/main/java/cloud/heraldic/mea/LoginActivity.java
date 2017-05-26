@@ -64,9 +64,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         setContentView(R.layout.activity_login);
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
-
+        mEmailView.setText("Newbie");
 
         mPasswordView = (EditText) findViewById(R.id.password);
+        mPasswordView.setText("qwerty");
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
@@ -148,7 +149,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     private boolean isEmailValid(String email) {
         //TODO: Replace this with your own logic
-        return email.equals("newbie@blackmail.heraldic.cloud");
+        return email.equals("Newbie");
     }
 
     private boolean isPasswordValid(String password) {

@@ -19,6 +19,7 @@ import android.content.Context;
 import android.net.Uri;
 
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
+import com.amazonaws.auth.policy.actions.EC2Actions;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.ec2.AmazonEC2;
 import com.amazonaws.services.ec2.AmazonEC2Client;
@@ -38,6 +39,7 @@ public class Util {
     // We only need one instance of the clients and credentials provider
     private static AmazonEC2Client sEC2Client;
     private static CognitoCachingCredentialsProvider sCredProvider;
+    private static AmazonEC2 ec2Utility;
 
     /**
      * Gets an instance of CognitoCachingCredentialsProvider which is
@@ -50,7 +52,7 @@ public class Util {
         if (sCredProvider == null) {
             sCredProvider = new CognitoCachingCredentialsProvider(
                     context.getApplicationContext(),
-                    Constants.COGNITO_POOL_ID,
+                    Constants.IDENTITY_POOL_ID,
                     Regions.US_EAST_1);
         }
         return sCredProvider;
@@ -63,62 +65,20 @@ public class Util {
      * @param context An Context instance.
      * @return A default S3 client.
      */
-    public static AmazonEC2Client getS3Client(Context context) {
+    public static AmazonEC2Client getEC2Client(Context context) {
         if (sEC2Client == null) {
             sEC2Client = new AmazonEC2Client(getCredProvider(context.getApplicationContext()));
         }
         return sEC2Client;
     }
-
-    /**
-     * Converts number of bytes into proper scale.
-     *
-     * @param bytes number of bytes to be converted.
-     * @return A string that represents the bytes in a proper scale.
-     */
-    public static String getBytesString(long bytes) {
-        String[] quantifiers = new String[] {
-                "KB", "MB", "GB", "TB"
-        };
-        double speedNum = bytes;
-        for (int i = 0;; i++) {
-            if (i >= quantifiers.length) {
-                return "";
-            }
-            speedNum /= 1024;
-            if (speedNum < 512) {
-                return String.format("%.2f", speedNum) + " " + quantifiers[i];
-            }
-        }
-    }
-
-    /**
-     * Copies the data from the passed in Uri, to a new file for use with the
-     * Transfer Service
-     * 
-     * @param context
-     * @param uri
-     * @return
-     * @throws IOException
-     */
-    public static File copyContentUriToFile(Context context, Uri uri) throws IOException {
-        InputStream is = context.getContentResolver().openInputStream(uri);
-        File copiedData = new File(context.getDir("SampleImagesDir", Context.MODE_PRIVATE), UUID
-                .randomUUID().toString());
-        copiedData.createNewFile();
-
-        FileOutputStream fos = new FileOutputStream(copiedData);
-        byte[] buf = new byte[2046];
-        int read = -1;
-        while ((read = is.read(buf)) != -1) {
-            fos.write(buf, 0, read);
+/* commented out because i think this function is not needed. i rewote this from s3 sample.
+    public static AmazonEC2 getec2Utility(Context context) {
+        if (ec2Utility == null) {
+            ec2Utility = new AmazonEC2(getEC2Client(context.getApplicationContext()), //Instead of AmazonEC2 find another method that I'm supposed to use
+                    context.getApplicationContext());
         }
 
-        fos.flush();
-        fos.close();
-
-        return copiedData;
+        return ec2Utility;
     }
-
-
+*/
 }
